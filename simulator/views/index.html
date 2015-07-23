@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Boxketball Simulator</title>    
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap-theme.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type="text/javascript" src="/javascripts/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lodash.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/main.js"></script>
+    <script type="text/template" id="template">
+      <h3>Baskets</h3>
+      <div id="baskets">
+	<table>
+	  <tr>
+	    <% for (var i = 0; i < baskets.length; i++) { %>
+	    <td>
+	      <% var btnClass = baskets[i].light ? 'btn-success' : 'btn-default' %>
+	      <button class="btn <%= btnClass %> basket" data-id="<%= i %>">
+		<span class="header">Basket: <%= i + 1 %></span><br>
+		<span class="body">Points: <%= baskets[i].points %></span>
+	      </button>
+	    </td>
+	    <% if ((i + 1) % 4 == 0) { %>
+	      </tr><tr>
+	    <% } %>
+          <% } %>				   
+	</table>
+      </div>
+    </script>
+  </head>
+  <body>
+    <h1>Boxketball Simulator</h1>
+
+    <div id="main"></div>
+  </body>
+</html>
