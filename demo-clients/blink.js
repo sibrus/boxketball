@@ -23,7 +23,18 @@ subClient.on('message', function(channel, message) {
       setTimeout(function() {
         publishMessage({ msg: 'basketOff', data: payload.data });
       }, 100);
+    } else if (payload.msg === 'hoopHit') {
+      publishMessage({ msg: 'hoopOn' });
+      setTimeout(function() {
+        publishMessage({ msg: 'hoopOff' });
+      }, 100);
+    } else if (payload.msg === 'reboundHit') {
+      publishMessage({ msg: 'reboundOn', data: payload.data });
+      setTimeout(function() {
+        publishMessage({ msg: 'reboundOff', data: payload.data });
+      }, 100);
     }
+
   } catch (e) {
     console.log('Error: ' + e);
     console.log('From message: ' + message);

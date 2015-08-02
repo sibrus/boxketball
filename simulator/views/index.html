@@ -8,25 +8,77 @@
     <script type="text/javascript" src="/javascripts/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/javascripts/lodash.min.js"></script>
     <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/javascripts/main.js"></script>
     <script type="text/template" id="template">
       <h3>Baskets</h3>
       <div id="baskets">
-	<table>
-	  <tr>
-	    <% for (var i = 0; i < baskets.length; i++) { %>
-	    <td>
-	      <% var btnClass = baskets[i].light ? 'btn-success' : 'btn-default' %>
-	      <button class="btn <%= btnClass %> basket" data-id="<%= i %>">
-		<span class="header">Basket: <%= i + 1 %></span><br>
-		<span class="body">Points: <%= baskets[i].points %></span>
-	      </button>
-	    </td>
-	    <% if ((i + 1) % 4 == 0) { %>
-	      </tr><tr>
-	    <% } %>
-          <% } %>				   
-	</table>
+        <table>
+          <tr>
+            <% for (var i = 0; i < baskets.length; i++) { %>
+              <td>
+                <% var btnClass = baskets[i].light ? 'btn-success' : 'btn-default' %>
+                <button class="btn <%= btnClass %> basket" data-id="<%= i %>" data-type="basket" id="basket_<%= i %>">
+                  <span class="header">Basket: <%= i + 1 %></span><br>
+                  <span class="body">Points: <%= baskets[i].points %></span>
+                </button>
+              </td>
+              <% if ((i + 1) % 4 == 0) { %>
+                </tr><tr>
+              <% } %>
+            <% } %>
+          </tr>
+        </table>
+      </div>
+      <h3>Extras</h3>
+      <% var hoopClass = (hoopLight) ? "btn-success" : "btn-default" %>
+      <button class="btn <%= hoopClass %> hoop" id="hoop" data-type="hoop">
+        <span class="header">Hoop</span>
+      </button>
+      <% var reboundClass = (reboundLight) ? "btn-success" : "btn-default" %>
+      <button class="btn <%= reboundClass %> rebound" id="rebound" data-type="rebound">
+        <span class="header">Rebound Board</span>
+      </button>
+      <% for (var i = 0; i < switches.length; i++) { %>
+        <% var switchClasses = this.getSwitchClasses(switches[i]); %>
+        <button class="btn <%= switchClasses %> switch" data-id="<%= i %>" data-type="switch" id="switch_<%= i %>">
+          <span class="header"><%= switches[i].label %></span>
+        </button>
+      <% } %>
+      <h3>Buttons</h3>
+      <div id="buttons">
+        <table>
+          <tr>
+            <% for (var i = 0; i < buttons.length; i++) { %>
+              <td>
+                <% var btnClass = this.getButtonClass(buttons[i]) %>
+                <button class="btn <%= btnClass %> button" data-id="<%= i %>" data-type="button" id="button_<%= i %>">
+                  <span class="header"><%= buttons[i].label %></span><br>
+                </button>
+              </td>
+              <% if ((i + 1) % 5 == 0) { %>
+                </tr><tr>
+              <% } %>
+            <% } %>
+          </tr>
+        </table>
+      </div>
+      <h3>Indicators</h3>
+      <div id="indicators">
+        <table>
+          <tr>
+            <% for (var i = 0; i < indicators.length; i++) { %>
+              <% if (indicators[i].label !== false) { %>
+                <td>
+                  <% var indicatorClass = indicators[i].light ? 'btn-success' : 'btn-default' %>
+                  <button class="btn <%= indicatorClass %> indicator" data-id="<%= i %>" data-type="indicator" id="indicator_<%= i %>">
+                    <span class="header"><%= indicators[i].label %></span><br>
+                  </button>
+                </td>
+              <% } %>
+            <% } %>
+          </tr>
+        </table>
       </div>
     </script>
   </head>
