@@ -33,6 +33,29 @@ subClient.on('message', function(channel, message) {
       setTimeout(function() {
         publishMessage({ msg: 'reboundOff', data: payload.data });
       }, 100);
+    } else if (payload.msg === 'buttonPress') {
+      if (payload.data >= 0 && payload.data < 3) {
+        publishMessage({ msg: 'indicatorOn', data: payload.data });
+        setTimeout(function() {
+          publishMessage({ msg: 'indicatorOff', data: payload.data });
+        }, 100);
+      }
+      if (payload.data == 5) {
+        publishMessage({ msg: 'indicatorOn', data: 4 });
+        setTimeout(function() {
+          publishMessage({ msg: 'indicatorOff', data: 4 });
+        }, 100);
+      }
+      if (payload.data == 6) {
+        publishMessage({ msg: 'indicatorOn', data: 5 });
+        setTimeout(function() {
+          publishMessage({ msg: 'indicatorOff', data: 5 });
+        }, 100);
+      }
+    } else if (payload.msg === 'switchOn') {
+        publishMessage({ msg: 'indicatorOn', data: 3 });
+    } else if (payload.msg === 'switchOff') {
+        publishMessage({ msg: 'indicatorOff', data: 3 });
     }
 
   } catch (e) {

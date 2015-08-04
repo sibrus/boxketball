@@ -27,6 +27,46 @@ Simulator.prototype = {
       { 
         points: 5,
         light: false
+      },
+      { 
+        points: 1,
+        light: false
+      },
+      { 
+        points: 1,
+        light: false
+      },
+      { 
+        points: 1,
+        light: false
+      },
+      { 
+        points: 3,
+        light: false
+      },
+      { 
+        points: 5,
+        light: false
+      },
+      { 
+        points: 1,
+        light: false
+      },
+      { 
+        points: 1,
+        light: false
+      },
+      { 
+        points: 1,
+        light: false
+      },
+      { 
+        points: 3,
+        light: false
+      },
+      { 
+        points: 5,
+        light: false
       }
     ];
 
@@ -108,6 +148,13 @@ Simulator.prototype = {
       }
     ];
 
+    for (var i = 0; i < this.buttons.length; i++) {
+      this.buttons[i].idx = i;
+    }
+    for (var i = 0; i < this.switches.length; i++) {
+      this.switches[i].idx = i;
+    }
+
     var templateStr = $('#template').html();
     this.template = _.template(templateStr);
 
@@ -117,23 +164,31 @@ Simulator.prototype = {
   },
 
   getButtonClass: function(button) {
-    if (button.indicator === false) {
-      return 'btn-info';
+    try {
+      if (button.indicator === false) {
+        return 'btn-info';
+      }
+      return (this.indicators[button.indicator].light) ? 'btn-success' : 'btn-default';
+    } catch(e) {
+      return '';
     }
-    return (this.indicators[button.indicator].light) ? 'btn-success' : 'btn-default';
   },
 
   getSwitchClasses: function(switchItem) {
-    var baseClass;
-    if (switchItem.indicator === false) {
-      baseClass = 'btn-info';
-    } else {
-      baseClass = (this.indicators[switchItem.indicator].light) ? 'btn-success' : 'btn-default';
+    try {
+      var baseClass;
+      if (switchItem.indicator === false) {
+        baseClass = 'btn-info';
+      } else {
+        baseClass = (this.indicators[switchItem.indicator].light) ? 'btn-success' : 'btn-default';
+      }
+      if (switchItem.on) {
+        baseClass += ' active';
+      }
+      return baseClass;
+    } catch(e) {
+      return '';
     }
-    if (switchItem.on) {
-      baseClass += ' active';
-    }
-    return baseClass;
   },
 
   initSocket: function() {
@@ -145,27 +200,59 @@ Simulator.prototype = {
     this.socket.on('box.raw.input', this.processMessage);
   },
 
+  changeIndicator: function(indicatorIdx, value) {
+    this.indicators[indicatorIdx].light = value;
+    var $indicator;
+    if (this.indicators[indicatorIdx].label !== false) {
+      $indicator = $('#indicator_' + indicatorIdx);
+    } else {
+      var button = _.find(this.buttons, function(x) { return x.indicator === indicatorIdx; });
+      if (button != null) {
+        $indicator = $('#button_' + button.idx);
+      } else {
+        var switchItem = _.find(this.switches, function(x) { return x.indicator === indicatorIdx; });
+        $indicator = $('#switch_' + switchItem.idx);
+      }
+    }
+
+    if ($indicator != null) {
+      if (value) {
+        $indicator.addClass('btn-success').removeClass('btn-default');
+      } else {
+        $indicator.addClass('btn-default').removeClass('btn-success');
+      }
+    }
+  },
+
   processMessage: function(payload) {
     console.log('Got message: ');
     console.log(payload);
-    if (payload.msg == 'basketOn') {
-      this.baskets[payload.data].light = true;
-      $('#basket_' + payload.data).addClass('btn-success').removeClass('btn-default');
-    } else if (payload.msg == 'basketOff') {
-      this.baskets[payload.data].light = false;
-      $('#basket_' + payload.data).addClass('btn-default').removeClass('btn-success');
-    } else if (payload.msg == 'hoopOn') {
-      $('#hoop').addClass('btn-success').removeClass('btn-default');
-      this.hoopLight = true;
-    } else if (payload.msg == 'hoopOff') {
-      $('#hoop').addClass('btn-default').removeClass('btn-success');
-      this.hoopLight = false;
-    } else if (payload.msg == 'reboundOn') {
-      $('#rebound').addClass('btn-success').removeClass('btn-default');
-      this.reboundLight = true;
-    } else if (payload.msg == 'reboundOff') {
-      $('#rebound').addClass('btn-default').removeClass('btn-success');
-      this.reboundLight = false;
+    try {
+      if (payload.msg == 'basketOn') {
+        this.baskets[payload.data].light = true;
+        $('#basket_' + payload.data).addClass('btn-success').removeClass('btn-default');
+      } else if (payload.msg == 'basketOff') {
+        this.baskets[payload.data].light = false;
+        $('#basket_' + payload.data).addClass('btn-default').removeClass('btn-success');
+      } else if (payload.msg == 'hoopOn') {
+        $('#hoop').addClass('btn-success').removeClass('btn-default');
+        this.hoopLight = true;
+      } else if (payload.msg == 'hoopOff') {
+        $('#hoop').addClass('btn-default').removeClass('btn-success');
+        this.hoopLight = false;
+      } else if (payload.msg == 'reboundOn') {
+        $('#rebound').addClass('btn-success').removeClass('btn-default');
+        this.reboundLight = true;
+      } else if (payload.msg == 'reboundOff') {
+        $('#rebound').addClass('btn-default').removeClass('btn-success');
+        this.reboundLight = false;
+      } else if (payload.msg == 'indicatorOn') {
+        this.changeIndicator(payload.data, true);
+      } else if (payload.msg == 'indicatorOff') {
+        this.changeIndicator(payload.data, false);
+      }
+    } catch(e) {
+      console.log('Error processing message: ' + e);
     }
   },
 
