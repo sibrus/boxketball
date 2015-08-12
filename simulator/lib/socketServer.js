@@ -1,7 +1,6 @@
 var SocketIO = require('socket.io');
 var _ = require('lodash');
 var Promise = require('bluebird');
-var uuid = require('node-uuid');
 var redis = require('redis');
 Promise.promisifyAll(redis);
 
