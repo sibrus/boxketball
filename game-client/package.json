@@ -2,14 +2,16 @@
   "name": "game-client",
   "version": "0.0.1",
   "description": "Subscriber that implements boxketball and other game logic.",
-  "main": "main.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ivan Matyunin",
   "license": "MIT",
   "dependencies": {
-    "redis": "~0.12.1",
-    "bluebird": "~2.9.34"
+    "base-class": "^1.0.3",
+    "bluebird": "~2.9.34",
+    "lodash": "^3.10.1",
+    "redis": "~0.12.1"
   }
 }

@@ -16,6 +16,7 @@ SocketServer.prototype = {
     this.subClient = redis.createClient();
     this.subClient.on('message', this.processInMsg);
     this.subClient.subscribe('box.raw.input');
+    this.subClient.subscribe('box.raw.output');
 
     this.io = SocketIO(server);
 
@@ -26,14 +27,22 @@ SocketServer.prototype = {
         console.log('user disconnected: ' + socket.id);
       });
 
-      socket.on('box.raw.output', this.processOutMsg);
+      socket.on('box.raw.input', this.processOutMsg1);
+      socket.on('box.raw.output', this.processOutMsg2);
 
       socket.emit('handshake', 'hello');
                
     }, this));
   },
 
-  processOutMsg: function(payload) {
+  processOutMsg1: function(payload) {
+    console.log('Got input msg:');
+    console.log(payload);
+
+    this.pubClient.publish('box.raw.input', JSON.stringify(payload));
+  },
+
+  processOutMsg2: function(payload) {
     console.log('Got output msg:');
     console.log(payload);
 
