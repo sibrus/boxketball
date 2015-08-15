@@ -72,16 +72,20 @@ Simulator.prototype = {
 
     this.buttons = [
       {
-        label: 'Player 1',
+        label: 'P1 Miss',
         indicator: 0
       },
       {
-        label: 'Player 2',
+        label: 'P1 Steal',
         indicator: 1
       },
       {
-        label: 'Intercept',
+        label: 'P2 Miss',
         indicator: 2
+      },
+      {
+        label: 'P2 Steal',
+        indicator: 3
       },
       {
         label: 'Rebound Yes',
@@ -117,11 +121,15 @@ Simulator.prototype = {
       {
         on: false,
         label: 'Demo Mode',
-        indicator: 3
+        indicator: 4
       }
     ];
 
     this.indicators = [
+      {
+        label: false,
+        light: false
+      },
       {
         label: false,
         light: false
