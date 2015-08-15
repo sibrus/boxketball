@@ -24,7 +24,7 @@ Player.prototype.toJSON = function() {
 var BoxketballGame = Behavior.extend({
   initHook: function() {
     resetAll(this);
-    this.started = true;
+    this.gameState = 'started';
     this.players = [
       new Player(1),
       new Player(2)
@@ -48,7 +48,7 @@ var BoxketballGame = Behavior.extend({
     this.givePosession(playerNumber, false);
     this.playerTurn = playerNumber;
     if (emit !== false) {
-      this.publishGame('changeTurn', playerNumber);      
+      this.publishGame('changeTurn', { player: playerNumber });
     }
   },
   givePosession: function(playerNumber) {
@@ -60,12 +60,23 @@ var BoxketballGame = Behavior.extend({
         this.basketOn(baskets[i]);
       }
     }
+    if (playerNumber == 1) {
+      this.buttonOn('p1_miss');
+      this.buttonOn('p2_steal');
+      this.buttonOff('p1_steal');
+      this.buttonOff('p2_miss');
+    } else {
+      this.buttonOn('p1_steal');
+      this.buttonOn('p2_miss');
+      this.buttonOff('p1_miss');
+      this.buttonOff('p2_steal');
+    }
   },
   getGameState: function() {
     var gameState = {
-      started: this.started
+      gameState: this.gameState
     };
-    if (this.started) {
+    if (this.gameState == 'started') {
       gameState.playerTurn = this.playerTurn;
       gameState.playerPosession = this.playerPosession;
       gameState.multiplierHit = this.multiplierHit;
@@ -87,7 +98,49 @@ var BoxketballGame = Behavior.extend({
       if (payload.msg === 'basketHit') {
         this.tryHitBasket(payload.basket);
       }
+      if (payload.msg === 'reboundHit') {
+        this.hitRebound();
+      }
+      if (payload.msg === 'buttonPress') {
+        if (payload.button.key === 'rebound_yes') {
+          this.hitRebound();
+        } else if (payload.button.key === 'rebound_no') {
+          this.reboundOff();
+        } else if (payload.button.key === 'p1_miss') {
+          this.tryMiss(1);
+        } else if (payload.button.key === 'p1_steal') {
+          this.trySteal(1);
+        } else if (payload.button.key === 'p2_miss') {
+          this.tryMiss(2);          
+        } else if (payload.button.key === 'p2_steal') {
+          this.trySteal(2);
+        }
+      }
     }
+  },
+  tryMiss: function(playerNumber) {
+    if (playerNumber == this.playerPosession) {
+      this.publishGame('miss', { player: playerNumber });
+
+      var player = this.getCurrentPlayer();
+      player.ballsLeft -= 1;
+
+      this.nextTurn();
+    }
+  },
+  trySteal: function(playerNumber) {
+    if (playerNumber != this.playerPosession) {
+      this.givePosession(playerNumber);
+      this.publishGame('steal', { player: playerNumber });
+    }
+  },
+  reboundOff: function() {
+    this.multiplierHit = false
+    this.publishGame('multiplerOff')
+  },
+  hitRebound: function() {
+    this.multiplierHit = true;
+    this.publishGame('multiplierHit');
   },
   isBasketHit: function(basket) {
     var playerNum = this.playerPosession;

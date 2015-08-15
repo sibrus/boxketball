@@ -2,9 +2,11 @@ var requireRoot = require('app-root-path').require;
 
 var Behavior = require('./behavior');
 var cycleBaskets = requireRoot('/animations/cycle-baskets');
+var resetAll = requireRoot('/animations/reset-all');
 
 var IdleBehavior = Behavior.extend({
   initHook: function() {
+    resetAll(this);
     this.cycler = cycleBaskets(this, [0, 1, 2, 3], 500, true);
     this.cycler2 = cycleBaskets(this, [6, 7, 4, 5], 500, true);
   },
