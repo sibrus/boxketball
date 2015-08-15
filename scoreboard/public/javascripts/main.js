@@ -13,8 +13,8 @@ BoxketballClient.prototype = {
       console.log('Got handshake: ' + message);
     });
 
-    this.socket.on('box.raw.input', this.processMessage);
-    this.socket.on('box.raw.output', this.processMessage);
+    this.socket.on('box.events', this.processMessage);
+    this.socket.on('box.game.boxketball', this.processMessage);
   },
 
   processMessage: function(payload) {

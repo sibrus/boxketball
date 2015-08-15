@@ -6,6 +6,7 @@ var IdleBehavior = require('./behaviors/idle-behavior');
 var BlinkBehavior = require('./behaviors/blink-behavior');
 var NothingBehavior = require('./behaviors/nothing-behavior');
 var buttons = require('./data/buttons');
+var baskets = require('./data/baskets');
 
 var Manager = function() {  
   _.bindAll(this);
@@ -27,7 +28,11 @@ Manager.prototype = {
       this.currentBehavior.destroy();
     }
     console.log('Will transition to: ' + behavior);
+    this.publishEvent('transition', behavior);
     this.currentBehavior = new this.behaviors[behavior]({owner: this});
+  },
+  publishEvent: function(event, data) {
+    this.publish('box.events', { event: event, data: data });
   },
   publish: function(channel, payload) {
     this.client.publish(channel, payload);
@@ -42,6 +47,9 @@ Manager.prototype = {
       if (payload.button.key == 'hard_reset') {
         process.exit(1);
       }
+    }
+    if (channel == 'box.raw.output' && payload.msg == 'basketHit') {
+      payload.basket = baskets[payload.data];
     }
     if (channel == 'box.raw.output' && payload.msg == 'switchOn' && payload.data == 0) {
       this.transitionTo('nothing');

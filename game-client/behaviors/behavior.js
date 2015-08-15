@@ -27,15 +27,24 @@ var Behavior = BaseClass.extend({
   reboundOff: function() {
     this.publish('box.raw.input', { msg: 'reboundOff' });
   },
-  buttonOn: function(button) {
-    var buttonObj = (typeof(button) === 'number') ? buttons[button] : button;
+  getButtonObj: function(button) {
+    if (typeof(button) === 'number') {
+      return buttons[number];
+    } else if (typeof(button) === 'string') {
+      return _.find(buttons, function(x) { return x.key == button; });
+    } else {
+      return button;
+    }
+  },
+  buttonOn: function(button) {    
+    var buttonObj = this.getButtonObj(button);
     var indicator = buttonObj.indicator;
     if (typeof(indicator) === 'number') {
       this.publish('box.raw.input', { msg: 'indicatorOn', data: indicator });
     }
   },
   buttonOff: function(button) {
-    var buttonObj = (typeof(button) === 'number') ? buttons[button] : button;
+    var buttonObj = this.getButtonObj(button);
     var indicator = buttonObj.indicator;
     if (typeof(indicator) === 'number') {
       this.publish('box.raw.input', { msg: 'indicatorOff', data: indicator });
@@ -63,12 +72,21 @@ var Behavior = BaseClass.extend({
     var basketObj = (typeof(basket) === 'number') ? baskets[basket] : basket;
     this.publish('box.raw.input', { msg: 'basketOff', data: basketObj.number });
   },
+  getIndicatorObj: function(indicator) {
+    if (typeof(indicator) === 'number') {
+      return indicators[number];
+    } else if (typeof(indicator) === 'string') {
+      return _.find(indicators, function(x) { return x.key == indicator; });
+    } else {
+      return indicator;
+    }
+  },
   indicatorOn: function(indicator) {
-    var indicatorObj = (typeof(indicator) === 'number') ? indicators[indicator] : indicator;
+    var indicatorObj = this.getIndicatorObj(indicator);
     this.publish('box.raw.input', { msg: 'indicatorOn', data: indicatorObj.number });
   },
   indicatorOff: function(indicator) {
-    var indicatorObj = (typeof(indicator) === 'number') ? indicators[indicator] : indicator;
+    var indicatorObj = this.getIndicatorObj(indicator);
     this.publish('box.raw.input', { msg: 'indicatorOff', data: indicatorObj.number });
   },
   publish: function(channel, payload) {
