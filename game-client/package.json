@@ -4,13 +4,18 @@
   "description": "Subscriber that implements boxketball and other game logic.",
   "main": "app.js",
   "scripts": {
+    "start": "forever start -a -l forever.log -o out.log -e err.log --uid boxketball -c \"node --harmony\" app.js",
+    "stop": "forever stop boxketball",
+    "debug": "nodemon --debug --harmony app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ivan Matyunin",
   "license": "MIT",
   "dependencies": {
+    "app-root-path": "^1.0.0",
     "base-class": "^1.0.3",
     "bluebird": "~2.9.34",
+    "co": "^4.6.0",
     "lodash": "^3.10.1",
     "redis": "~0.12.1"
   }

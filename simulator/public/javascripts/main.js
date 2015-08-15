@@ -96,23 +96,15 @@ Simulator.prototype = {
         indicator: false
       },
       {
-        label: 'Up',
+        label: 'Mode',
         indicator: false
       },
       {
-        label: 'Down',
+        label: 'Soft Reset',
         indicator: false
       },
       {
-        label: 'Left',
-        indicator: false
-      },
-      {
-        label: 'Right',
-        indicator: false
-      },
-      {
-        label: 'Select',
+        label: 'Hard Reset',
         indicator: false
       }
     ];

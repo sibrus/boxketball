@@ -1,51 +1,53 @@
-var _ = require('lodash');
+var requireRoot = require('app-root-path').require;
+
 var Behavior = require('./behavior');
+var baskets = requireRoot('/data/baskets');
+var reset = requireRoot('/animations/reset');
 
 var BlinkBehavior = Behavior.extend({
+  initHook: function() {
+    reset(this, 'basketOff', baskets);
+  },
   processMessage: function(channel, payload) {
     console.log('BlinkBehavior got message');
     var self = this;
     if (payload.msg === 'basketHit') {
-      self.publish('box.raw.input', { msg: 'basketOn', data: payload.data });
+      self.basketOn(payload.data);
       setTimeout(function() {
-        self.publish('box.raw.input', { msg: 'basketOff', data: payload.data });
+        self.basketOff(payload.data);
       }, 300);
     } else if (payload.msg === 'hoopHit') {
-      self.publish('box.raw.input', { msg: 'hoopOn' });
+      self.hoopOn();
       setTimeout(function() {
-        self.publish('box.raw.input', { msg: 'hoopOff' });
+        self.hoopOff();
       }, 300);
     } else if (payload.msg === 'reboundHit') {
-      self.publish('box.raw.input', { msg: 'reboundOn', data: payload.data });
+      self.reboundOn();
       setTimeout(function() {
-        self.publish('box.raw.input', { msg: 'reboundOff', data: payload.data });
+        self.reboundOff();
       }, 300);
     } else if (payload.msg === 'buttonPress') {
       if (payload.data >= 0 && payload.data < 4) {
-        self.publish('box.raw.input', { msg: 'indicatorOn', data: payload.data });
+        self.buttonOn(payload.data);
         setTimeout(function() {
-          self.publish('box.raw.input', { msg: 'indicatorOff', data: payload.data });
+          self.buttonOff(payload.data);
+        }, 300);
+      }
+      if (payload.data == 4) {
+        self.indicatorOn(5);
+        setTimeout(function() {
+          self.indicatorOff(5);
         }, 300);
       }
       if (payload.data == 5) {
-        self.publish('box.raw.input', { msg: 'indicatorOn', data: 4 });
+        self.indicatorOn(6);
         setTimeout(function() {
-          self.publish('box.raw.input', { msg: 'indicatorOff', data: 4 });
+          self.indicatorOff(6);
         }, 300);
       }
       if (payload.data == 6) {
-        self.publish('box.raw.input', { msg: 'indicatorOn', data: 5 });
-        setTimeout(function() {
-          self.publish('box.raw.input', { msg: 'indicatorOff', data: 5 });
-        }, 300);
-      }
-      if (payload.data == 10) {
         self.transitionTo('idle');
       }
-    } else if (payload.msg === 'switchOn') {
-        self.publish('box.raw.input', { msg: 'indicatorOn', data: 3 });
-    } else if (payload.msg === 'switchOff') {
-        self.publish('box.raw.input', { msg: 'indicatorOff', data: 3 });
     }
   }
 });
