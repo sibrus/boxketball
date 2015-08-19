@@ -18,12 +18,12 @@
             <% for (var i = 0; i < baskets.length; i++) { %>
               <td>
                 <% var btnClass = baskets[i].light ? 'btn-success' : 'btn-default' %>
-                <button class="btn <%= btnClass %> basket" data-id="<%= i %>" data-type="basket" id="basket_<%= i %>">
+                <button class="btn btn-block <%= btnClass %> basket" data-id="<%= i %>" data-type="basket" id="basket_<%= i %>">
                   <span class="header">Basket: <%= i + 1 %></span><br>
                   <span class="body">Points: <%= baskets[i].points %></span>
                 </button>
               </td>
-              <% if ((i + 1) % 4 == 0) { %>
+              <% if ((i + 1) % 5 == 0) { %>
                 </tr><tr>
               <% } %>
             <% } %>

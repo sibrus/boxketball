@@ -139,6 +139,14 @@ Simulator.prototype = {
         light: false
       },
       {
+        label: 'P1 Indicator',
+        light: false
+      },
+      {
+        label: 'P2 Indicator',
+        light: false
+      },
+      {
         label: 'Accent Light 1',
         light: false
       },

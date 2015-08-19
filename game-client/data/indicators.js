@@ -21,6 +21,14 @@ var indicators = [
   },
   {
     type: 'generic',
+    key: 'p1'
+  },
+  {
+    type: 'generic',
+    key: 'p2'
+  },
+  {
+    type: 'generic',
     key: 'accent1'
   },
   {

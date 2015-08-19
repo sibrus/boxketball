@@ -19,6 +19,10 @@ BoxketballClient.prototype = {
 
   processEventMessage: function(payload) {
     try {
+      var eventHtml = $('<li>').append($('<label>').text('Global event: ' + payload.event)).append($('<pre>').text(JSON.stringify(payload.data)));
+
+      $('#events').prepend(eventHtml);
+
       console.log('Got event message: ');
       console.log(payload);
     } catch(e) {
@@ -41,7 +45,7 @@ BoxketballClient.prototype = {
       console.log('Error processing game message: ' + e);
     }
 
-    var eventHtml = $('<li>').append($('<label>').text(payload.event)).append($('<pre>').text(JSON.stringify(payload.data)));
+    var eventHtml = $('<li>').append($('<label>').text('Boxketball event: ' + payload.event)).append($('<pre>').text(JSON.stringify(payload.data)));
 
     $('#events').prepend(eventHtml);
   }

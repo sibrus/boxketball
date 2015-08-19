@@ -1,3 +1,6 @@
+var Promise = require('bluebird');
+var co = require('co');
+
 var requireRoot = require('app-root-path').require;
 
 var Behavior = require('./behavior');
@@ -5,7 +8,9 @@ var baskets = requireRoot('/data/baskets');
 var buttons = requireRoot('/data/buttons');
 var indicators = requireRoot('/data/indicators');
 var switches = requireRoot('/data/switches');
+var reset = requireRoot('/animations/reset');
 var resetAll = requireRoot('/animations/reset-all');
+var pickPlayer = requireRoot('/animations/pick-player');
 
 var Player = function(num) {
   this.number = num;
@@ -24,27 +29,90 @@ Player.prototype.toJSON = function() {
 var BoxketballGame = Behavior.extend({
   initHook: function() {
     resetAll(this);
-    this.gameState = 'started';
+    this.gameState = 'starting';
     this.players = [
       new Player(1),
       new Player(2)
     ];
     this.hitBaskets = [];
-    this.giveTurn(1, false);
     this.multiplierHit = false;
-    this.publishGame('gameStart');
+    this.hoopHit = false;
+    this.inSuddenDeath = false;
+    this.numSuddenDeath = 0;
+
+    this.publishGame('gameStarting');
+    this.decidePlayerTurn();
+  },
+  decidePlayerTurn: function() {
+    var startingPlayer = (rand.bool()) ? 1 : 2;
+    pickPlayer(this, startingPlayer)
+      .bind(this)
+      .then(function() {
+        this.giveTurn(startingPlayer, false);
+        this.gameState = 'gameOn';
+        this.publishGame('gameOn');
+      });
   },
   getCurrentPlayer: function() {
     return this.players[this.playerTurn - 1];
   },
-  nextTurn: function() {
-    if (this.playerTurn == 1) {
-      this.giveTurn(2);
-    } else {
-      this.giveTurn(1);
-    }
+  nextTurn: function(delayTime) {
+    delayTime = delayTime || 1000;
+    
+    this.gameState = 'turnTransition';
+    var nextPlayerTurn = (this.playerTurn == 1) ? 2 : 1;
+    this.publishGame('changingTurn', { nextPlayerTurn: nextPlayerTurn });
+
+    this.indicatorOff('p1');
+    this.indicatorOff('p2');
+    this.buttonOff('p1_miss');
+    this.buttonOff('p1_steal');
+    this.buttonOff('p2_steal');        
+    this.buttonOff('p2_miss');
+
+    return Promise.delay(delayTime)
+      .bind(this)
+      .then(function() {
+        this.giveTurn(nextPlayerTurn);
+      });
+  },
+  playersOutOfBalls: function() {
+    return (this.players[0].ballsLeft == 0 && this.players[1].ballsLeft == 0);
+  },
+  haveWinner: function() {
+    return (this.players[0].score != this.players[1].score);
+  },
+  startSuddenDeath: function() {
+    this.inSuddenDeath = true;
+    this.numSuddenDeath += 1;
+    this.gameState = 'suddenDeath';
+    this.players[0].ballsLeft = 1;
+    this.players[1].ballsLeft = 1;
+    this.publishGame('startSuddenDeath', { numSuddenDeath: this.numSuddenDeath });
+  },
+  endGame: function() {
+    var winner = (this.players[0].score > this.players[1].score) ? 1 : 2;
+    this.gameState = 'gameOver';
+    this.publishGame('gameOver', { winner: winner });
+
+    var self = this;
+    co(function *() {
+      yield Promise.delay(5000);
+      self.transitionTo('idle');
+    });
   },
   giveTurn: function(playerNumber, emit) {
+    if (this.playersOutOfBalls()) {
+      if (this.haveWinner()) {
+        this.endGame();
+        return;
+      } else {
+        this.startSuddenDeath();
+      }
+    } else {
+      this.gameState = (this.inSuddenDeath) ? 'suddenDeath' : 'gameOn';
+    }
+
     this.givePosession(playerNumber, false);
     this.playerTurn = playerNumber;
     if (emit !== false) {
@@ -61,13 +129,25 @@ var BoxketballGame = Behavior.extend({
       }
     }
     if (playerNumber == 1) {
+      this.indicatorOn('p1');
+      this.indicatorOff('p2');
       this.buttonOn('p1_miss');
-      this.buttonOn('p2_steal');
+      if (this.inSuddenDeath) {
+        this.buttonOff('p2_steal');        
+      } else {     
+        this.buttonOn('p2_steal');
+      }
       this.buttonOff('p1_steal');
       this.buttonOff('p2_miss');
     } else {
-      this.buttonOn('p1_steal');
+      this.indicatorOn('p2');
+      this.indicatorOff('p1');
       this.buttonOn('p2_miss');
+      if (this.inSuddenDeath) {        
+        this.buttonOff('p1_steal');
+      } else {
+        this.buttonOn('p1_steal');
+      }
       this.buttonOff('p1_miss');
       this.buttonOff('p2_steal');
     }
@@ -76,10 +156,13 @@ var BoxketballGame = Behavior.extend({
     var gameState = {
       gameState: this.gameState
     };
-    if (this.gameState == 'started') {
+    if (this.gameState != 'starting') {
       gameState.playerTurn = this.playerTurn;
       gameState.playerPosession = this.playerPosession;
       gameState.multiplierHit = this.multiplierHit;
+      gameState.hoopHit = this.hoopHit;
+      gameState.inSuddenDeath = this.inSuddenDeath;
+      gameState.numSuddenDeath = this.numSuddenDeath;
       gameState.players = _.map(this.players, function(x) { return x.toJSON(); });
     }
     return gameState;
@@ -105,7 +188,7 @@ var BoxketballGame = Behavior.extend({
         if (payload.button.key === 'rebound_yes') {
           this.hitRebound();
         } else if (payload.button.key === 'rebound_no') {
-          this.reboundOff();
+          this.clearRebound();
         } else if (payload.button.key === 'p1_miss') {
           this.tryMiss(1);
         } else if (payload.button.key === 'p1_steal') {
@@ -119,6 +202,11 @@ var BoxketballGame = Behavior.extend({
     }
   },
   tryMiss: function(playerNumber) {
+    if (this.gameState != 'gameOn' && this.gameState != 'suddenDeath') {
+      console.log('Cannot miss unless the game is on... ' + this.gameState);
+      return;
+    }
+
     if (playerNumber == this.playerPosession) {
       this.publishGame('miss', { player: playerNumber });
 
@@ -129,20 +217,28 @@ var BoxketballGame = Behavior.extend({
     }
   },
   trySteal: function(playerNumber) {
+    if (this.gameState != 'gameOn') {
+      console.log('Cannot steal unless the game is on... ' + this.gameState);
+      return;
+    }
+
     if (playerNumber != this.playerPosession) {
       this.givePosession(playerNumber);
       this.publishGame('steal', { player: playerNumber });
     }
   },
-  reboundOff: function() {
+  clearRebound: function() {
     this.multiplierHit = false
-    this.publishGame('multiplerOff')
+    this.publishGame('multiplierCleared')
   },
   hitRebound: function() {
     this.multiplierHit = true;
     this.publishGame('multiplierHit');
   },
   isBasketHit: function(basket) {
+    if (this.gameState == 'suddenDeath') {
+      return false;
+    }
     var playerNum = this.playerPosession;
     var hitBasket = _.find(this.hitBaskets, function(x) {
       return (x.basketNumber == basket.number && x.playerNumber == playerNum);
@@ -150,10 +246,15 @@ var BoxketballGame = Behavior.extend({
     return (hitBasket != null);
   },
   tryHitBasket: function(basket) {
+    if (this.gameState != 'gameOn' && this.gameState != 'suddenDeath') {
+      console.log('Cannot hit basket unless the game is on (or sudden death)... ' + this.gameState);
+      return;
+    }
+
     var player = this.getCurrentPlayer();
 
     if (this.isBasketHit(basket)) {
-      this.publishGame('hitDeadBasket', basket);
+      this.publishGame('hitDeadBasket', { basket: basket });
     } else {
       var multiple = (this.multiplierHit) ? 2 : 1;
       player.score += basket.points * multiple;
@@ -161,12 +262,19 @@ var BoxketballGame = Behavior.extend({
         basketNumber: basket.number,
         playerNumber: this.playerPosession
       });
-      this.publishGame('hitBasket', basket);
+      this.publishGame('hitBasket', { basket: basket });
     }
 
     player.ballsLeft -= 1;
 
-    this.nextTurn();
+    var self = this;
+    Promise.all([
+      this.nextTurn(),
+      co(function *() {
+        // Do some animation or something
+        reset(self, 'basketOff', baskets);
+      })
+    ]);  
   }
 });
 
