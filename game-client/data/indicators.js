@@ -16,8 +16,24 @@ var indicators = [
     index: 3
   },
   {
+    type: 'button',
+    index: 4
+  },
+  {
+    type: 'button',
+    index: 5
+  },
+  {
     type: 'switch',
     index: 0
+  },
+  {
+    type: 'button',
+    index: 6
+  },
+  {
+    type: 'button',
+    index: 7
   },
   {
     type: 'generic',
@@ -26,14 +42,6 @@ var indicators = [
   {
     type: 'generic',
     key: 'p2'
-  },
-  {
-    type: 'generic',
-    key: 'accent1'
-  },
-  {
-    type: 'generic',
-    key: 'accent2'
   }
 ];
 

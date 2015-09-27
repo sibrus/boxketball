@@ -17,23 +17,19 @@ var buttons = [
   },
   {
     key: 'rebound_yes',
-    indicator: false
+    indicator: 4
   },
   {
     key: 'rebound_no',
-    indicator: false
-  },
-  {
-    key: 'mode',
-    indicator: false
+    indicator: 5
   },
   {
     key: 'soft_reset',
-    indicator: false
+    indicator: 7
   },
   {
     key: 'hard_reset',
-    indicator: false
+    indicator: 8
   }
 ];
 

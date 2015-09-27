@@ -22,40 +22,46 @@ subClient.on('message', function(channel, message) {
       publishMessage({ msg: 'basketOn', data: payload.data });
       setTimeout(function() {
         publishMessage({ msg: 'basketOff', data: payload.data });
-      }, 100);
+      }, 250);
     } else if (payload.msg === 'hoopHit') {
       publishMessage({ msg: 'hoopOn' });
       setTimeout(function() {
         publishMessage({ msg: 'hoopOff' });
-      }, 100);
+      }, 250);
     } else if (payload.msg === 'reboundHit') {
       publishMessage({ msg: 'reboundOn', data: payload.data });
       setTimeout(function() {
         publishMessage({ msg: 'reboundOff', data: payload.data });
-      }, 100);
+      }, 250);
     } else if (payload.msg === 'buttonPress') {
-      if (payload.data >= 0 && payload.data < 3) {
+      if (payload.data == 0) {
+        publishMessage({ msg: 'indicatorOn', data: 9 });
+        setTimeout(function() {
+          publishMessage({ msg: 'indicatorOff', data: 9 });
+        }, 250);
+      }
+      if (payload.data == 2) {
+        publishMessage({ msg: 'indicatorOn', data: 10 });
+        setTimeout(function() {
+          publishMessage({ msg: 'indicatorOff', data: 10 });
+        }, 250);
+      }
+      if (payload.data >= 0 && payload.data <= 5) {
         publishMessage({ msg: 'indicatorOn', data: payload.data });
         setTimeout(function() {
           publishMessage({ msg: 'indicatorOff', data: payload.data });
-        }, 100);
+        }, 250);
       }
-      if (payload.data == 5) {
-        publishMessage({ msg: 'indicatorOn', data: 4 });
+      if (payload.data >= 6 && payload.data <= 7) {
+        publishMessage({ msg: 'indicatorOn', data: payload.data + 1 });
         setTimeout(function() {
-          publishMessage({ msg: 'indicatorOff', data: 4 });
-        }, 100);
-      }
-      if (payload.data == 6) {
-        publishMessage({ msg: 'indicatorOn', data: 5 });
-        setTimeout(function() {
-          publishMessage({ msg: 'indicatorOff', data: 5 });
-        }, 100);
+          publishMessage({ msg: 'indicatorOff', data: payload.data + 1 });
+        }, 250);
       }
     } else if (payload.msg === 'switchOn') {
-        publishMessage({ msg: 'indicatorOn', data: 3 });
+        publishMessage({ msg: 'indicatorOn', data: 6 });
     } else if (payload.msg === 'switchOff') {
-        publishMessage({ msg: 'indicatorOff', data: 3 });
+        publishMessage({ msg: 'indicatorOff', data: 6 });
     }
 
   } catch (e) {

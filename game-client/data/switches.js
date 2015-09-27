@@ -1,7 +1,7 @@
 module.exports = [
   {
     key: 'demo',
-    indicator: 4,
+    indicator: 6,
     number: 0
   }
 ];

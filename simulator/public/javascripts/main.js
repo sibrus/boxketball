@@ -17,7 +17,7 @@ Simulator.prototype = {
         light: false
       },
       { 
-        points: 1,
+        points: 2,
         light: false
       },
       { 
@@ -25,23 +25,7 @@ Simulator.prototype = {
         light: false
       },
       { 
-        points: 5,
-        light: false
-      },
-      { 
-        points: 1,
-        light: false
-      },
-      { 
-        points: 1,
-        light: false
-      },
-      { 
-        points: 1,
-        light: false
-      },
-      { 
-        points: 3,
+        points: 4,
         light: false
       },
       { 
@@ -49,23 +33,31 @@ Simulator.prototype = {
         light: false
       },
       { 
-        points: 1,
+        points: 6,
         light: false
       },
       { 
-        points: 1,
+        points: 7,
         light: false
       },
       { 
-        points: 1,
+        points: -1,
         light: false
       },
       { 
-        points: 3,
+        points: -1,
         light: false
       },
       { 
-        points: 5,
+        points: -2,
+        light: false
+      },
+      { 
+        points: 10,
+        light: false
+      },
+      { 
+        points: 15,
         light: false
       }
     ];
@@ -89,23 +81,19 @@ Simulator.prototype = {
       },
       {
         label: 'Rebound Yes',
-        indicator: false
+        indicator: 4
       },
       {
         label: 'Rebound No',
-        indicator: false
-      },
-      {
-        label: 'Mode',
-        indicator: false
+        indicator: 5
       },
       {
         label: 'Soft Reset',
-        indicator: false
+        indicator: 7
       },
       {
         label: 'Hard Reset',
-        indicator: false
+        indicator: 8
       }
     ];
 
@@ -113,11 +101,27 @@ Simulator.prototype = {
       {
         on: false,
         label: 'Demo Mode',
-        indicator: 4
+        indicator: 6
       }
     ];
 
     this.indicators = [
+      {
+        label: false,
+        light: false
+      },
+      {
+        label: false,
+        light: false
+      },
+      {
+        label: false,
+        light: false
+      },
+      {
+        label: false,
+        light: false
+      },
       {
         label: false,
         light: false
@@ -144,14 +148,6 @@ Simulator.prototype = {
       },
       {
         label: 'P2 Indicator',
-        light: false
-      },
-      {
-        label: 'Accent Light 1',
-        light: false
-      },
-      {
-        label: 'Accent Light 2',
         light: false
       }
     ];

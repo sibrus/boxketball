@@ -6,43 +6,37 @@ var baskets = [
     points: 1
   },
   { 
-    points: 1
+    points: 2
   },
   { 
     points: 3
   },
   { 
-    points: 5
-  },
-  { 
-    points: 1
-  },
-  { 
-    points: 1
-  },
-  { 
-    points: 1
-  },
-  { 
-    points: 3
+    points: 4
   },
   { 
     points: 5
   },
   { 
-    points: 1
+    points: 6
   },
   { 
-    points: 1
+    points: 7
   },
   { 
-    points: 1
+    points: -1
   },
   { 
-    points: 3
+    points: -1
   },
   { 
-    points: 5
+    points: -2
+  },
+  { 
+    points: 10
+  },
+  { 
+    points: 15
   }
 ];
 
