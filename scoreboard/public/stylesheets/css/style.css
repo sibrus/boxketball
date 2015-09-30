@@ -528,11 +528,13 @@ body {
   .event#event-miss {
     background: #ee1a56; }
   .event#event-hoop {
-    background: #29ffcf; }
+    background: #bf1f93; }
   .event#event-multiply {
-    background: #fffb00; }
+    background: #29ffcf; }
   .event#event-overtime {
     background: #ff7b29; }
+  .event#event-holyshit {
+    background: #fffb00; }
   .event i {
     display: block;
     text-align: center;
@@ -559,8 +561,18 @@ body {
     animation-delay: .2s;
     animation-iteration-count: 1;
     animation-fill-mode: forwards; }
-    .event.active#event-hoop, .event.active#event-overtime {
+    .event.active#event-hoop, .event.active#event-overtime, .event.active#event-holyshit {
       animation-delay: 1s; }
+    .event.active i.icon-thumbs {
+      animation-name: pulse;
+      animation-duration: .8s;
+      animation-fill-mode: both;
+      animation-iteration-count: infinite; }
+    .event.active i.icon-emoji-shock {
+      animation-name: pulse;
+      animation-duration: .4s;
+      animation-fill-mode: both;
+      animation-iteration-count: infinite; }
     .event.active i.icon-question {
       animation-name: spinIt;
       animation-duration: 1s;

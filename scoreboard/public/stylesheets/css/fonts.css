@@ -90,6 +90,9 @@
 .icon-emoji-shock:before {
 	content: "\e60f";
 }
+.icon-thumbs:before {
+	content: "\e603";
+}
 .icon-bomb:before {
 	content: "\e610";
 }

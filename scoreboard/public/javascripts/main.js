@@ -124,7 +124,7 @@ BoxketballClient.prototype = {
         $('#classic-mode').addClass('game-over');
       }
       else {
-        if (payload.event == 'steal' || payload.event == 'miss' || payload.event == 'multiplierHit' || payload.event == 'hitHoop' || payload.event == 'startSuddenDeath') {
+        if (payload.event == 'steal' || payload.event == 'miss' || payload.event == 'multiplierHit' || payload.event == 'hitHoop' || payload.event == 'startSuddenDeath' || payload.event == 'hitBasket') {
           $('.event').remove();        
         }
         if (payload.event == 'steal') {
@@ -146,6 +146,10 @@ BoxketballClient.prototype = {
         else if (payload.event == 'startSuddenDeath') {
           $('#events-flasher').append('<div class="event" id="event-overtime"><div class="wrap"><i class="icon-skull"></i><span class="event-text">SUDDEN DEATH</span></div></div>');
           $('#event-overtime').addClass('active');
+        }
+        else if (payload.event == 'hitBasket' && payload.data.basket.points >= 15) {
+          $('#events-flasher').append('<div class="event" id="event-holyshit"><div class="wrap"><i class="icon-emoji-shock"></i><span class="event-text">HOLY SHIT</span></div></div>');
+          $('#event-holyshit').addClass('active');              
         }
         
         $('#idle-screen').hide();
