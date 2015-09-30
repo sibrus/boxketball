@@ -49,7 +49,7 @@ Simulator.prototype = {
         light: false
       },
       { 
-        points: -2,
+        points: -3,
         light: false
       },
       { 

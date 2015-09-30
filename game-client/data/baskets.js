@@ -30,7 +30,7 @@ var baskets = [
     points: -1
   },
   { 
-    points: -2
+    points: -3
   },
   { 
     points: 10
