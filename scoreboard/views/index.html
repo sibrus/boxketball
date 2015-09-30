@@ -2,9 +2,9 @@
 <html>
   <head>
     <title>Boxketball Scoreboard</title>    
-    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
-    <link rel='stylesheet' href='/stylesheets/bootstrap-theme.css' />
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/css/reset.css" />
+    <link rel="stylesheet" href="/stylesheets/css/fonts.css" />
+    <link rel="stylesheet" href="/stylesheets/css/style.css" />
     <script type="text/javascript" src="/javascripts/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/javascripts/lodash.min.js"></script>
     <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
@@ -12,6 +12,56 @@
     <script type="text/javascript" src="/javascripts/main.js"></script>
   </head>
   <body id="body">
+    <header class="app-header">
+      <i class="icon-logo"></i>
+    </header>
+    
+    <div class="classic-mode">
+      <!-- P1 -->
+      <section class="player" id="p1">
+        <header>
+          <span class="emoji" id="p1_emoji"><i class="icon-smile"></i></span>
+          <h2>Player 1</h2>
+        </header>
+        
+        <span class="score" id="p1_score"></span>
+        
+        <footer>
+          <span class="balls-label">Balls Left</span>
+          <span class="balls" id="p1_balls"></span>
+        </footer>
+      </section>
+  
+      <!-- P2 -->
+      <section class="player" id="p2">
+        <header>
+          <span class="emoji" id="p2_emoji"><i class="icon-hipster"></i></span>
+          <h2>Player 2</h2>
+        </header>
+        
+        <span class="score" id="p2_score"></span>
+        
+        <footer>
+          <span class="balls-label">Balls Left</span>
+          <span class="balls" id="p2_balls"></span>
+        </footer>
+      </section>
+    
+      <!-- Possession -->
+      <div class="possession">
+        <span class="pos-label">Possession</span>
+        <i class="icon-pos-left" id="p1_pos"></i>
+        <i class="icon-pos-right" id="p2_pos"></i>
+      </div>
+      
+      <!-- Event Flash -->
+      <div class="event">
+        <span id="event-text"></span>
+      </div>          
+    </div>
+    
+    
+    <!--
     <h1>Game State</h1>
     <div>
       <label>Game state:</label>
@@ -62,6 +112,6 @@
     </div>
     <h1>Events</h1>
     <ul id="events">
-    </ul>
+    </ul>-->
   </body>
 </html>

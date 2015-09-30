@@ -1,0 +1,120 @@
+/*
+//      _/      _/  _/_/_/  _/      _/  _/_/_/  _/      _/    _/_/_/
+//     _/_/  _/_/    _/      _/  _/      _/    _/_/    _/  _/
+//    _/  _/  _/    _/        _/        _/    _/  _/  _/    _/_/
+//   _/      _/    _/      _/  _/      _/    _/    _/_/        _/
+//  _/      _/  _/_/_/  _/      _/  _/_/_/  _/      _/  _/_/_/
+*/
+
+/* =========================================================================
+   Colors & Shades
+   ========================================================================== */
+
+$pink : #ff2949;
+$teal : #29FFCF;
+$green : #63FF29;
+$orange : #FF7B29;
+$yellow : #C8FF29;
+
+/* ==========================================================================
+   Fonts
+   ========================================================================== */
+
+@mixin oldskool { font-family: '8bit'; }
+@mixin highfive { font-family: 'highfive', sans-serif; }
+@mixin highfive-alt { font-family: 'highfive-alt', sans-serif; }
+@mixin bauhaus { font-family: 'bauhaus', sans-serif; }
+
+/* ==========================================================================
+   Mixins
+   ========================================================================== */
+
+@mixin transition($e:all,$t:150ms,$f:ease) { -moz-transition: $e $t $f; -webkit-transition: $e $t $f; transition: $e $t $f; }
+@mixin transition_remove() { -moz-transition: none; -webkit-transition: none; transition: none; }
+@mixin hover() { background: $hoverbg; color: $hovertxt; text-shadow: $hoverts; }
+@mixin active() { background: $activebg; color: $activetxt; text-shadow: $activets; }
+@mixin cursor() { cursor: hand; cursor: pointer; &:hover, &:focus { cursor: hand; cursor: pointer; } }
+@mixin ellipsis() { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@mixin noselect() { -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+@mixin plain { margin: 0; padding: 0; list-style: none; }
+@mixin cf() { &:after { content: ""; display: table; clear: both; } }
+@mixin flipit() { display: block; -webkit-transform: matrix(-1, 0, 0, 1, 0, 0); -moz-transform: matrix(-1, 0, 0, 1, 0, 0); -o-transform: matrix(-1, 0, 0, 1, 0, 0); transform: matrix(-1, 0, 0, 1, 0, 0); }
+@mixin box-size($type) { @if $type == content { box-sizing: content-box; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; } @else if $type == border { box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; } @else if $type == padding { box-sizing: padding-box; -webkit-box-sizing: padding-box; -moz-box-sizing: padding-box; } }
+@mixin font-size($size:99, $line:99) { @if $size != 99 { font-size: ($size * 10) + px; font-size: $size + rem; } @if $line != 99 { line-height: ($line * 10) + px; line-height: $line + rem; } }
+@mixin font-size-import($size:99, $line:99) { @if $size != 99 { font-size: ($size * 10) + px !important; font-size: $size + rem !important; } @if $line != 99 { line-height: ($line * 10) + px !important; line-height: $line + rem !important; } }
+@mixin icomoon($c) { font-family: 'icomoon'; speak: none; font-style: normal; font-weight: normal; font-variant: normal; text-transform: none; line-height: 1; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; content: $c; }
+@mixin boop() { &:active { position: relative; top: 1px; } }
+@mixin align($dir) { position: relative; @if $dir == vertical { top: 50%; -webkit-transform: translateY(-50%); -ms-transform: translateY(-50%); transform: translateY(-50%); } @else if $dir == horizontal { left: 50%; -webkit-transform: translateX(-50%); -ms-transform: translateX(-50%); transform: translateX(-50%); } @else if $dir == both { top: 50%; left: 50%; -webkit-transform: translateX(-50%) translateY(-50%); -ms-transform: translateX(-50%) translateY(-50%); transform: translateX(-50%) translateY(-50%); } }
+@mixin rotate($degrees) { -webkit-transform: rotate($degrees); -moz-transform: rotate($degrees); -ms-transform: rotate($degrees); -o-transform: rotate($degrees); transform: rotate($degrees); -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=#{cos($degrees)}, M12=#{-1*sin($degrees)}, M21=#{sin($degrees)}, M22=#{cos($degrees)})"; filter:  progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=#{cos($degrees)}, M12=#{-1*sin($degrees)}, M21=#{sin($degrees)}, M22=#{cos($degrees)}); }
+@mixin znext($layer) { -webkit-transform:translateZ($layer + px); -moz-transform:translateZ($layer + px); -o-transform:translateZ($layer + px); transform:translateZ($layer + px); }
+@mixin grayscale() { -moz-filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); -o-filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); -webkit-filter: grayscale(100%); filter: gray; filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); }
+@mixin grayscale_remove() { -moz-filter: none; -o-filter: none; -webkit-filter: none; filter: none; }
+@mixin space_letters() { letter-spacing: 0.1rem; }
+
+/* ==========================================================================
+   Mixins (for animation edition!)
+   ========================================================================== */
+
+@mixin transform($transforms) {
+	   -moz-transform: $transforms;
+	     -o-transform: $transforms;
+	    -ms-transform: $transforms;
+	-webkit-transform: $transforms;
+          transform: $transforms;
+}
+
+@mixin scale($scale) {
+	 @include transform(scale($scale));
+}
+
+@mixin transform-origin ($origin) {
+    moz-transform-origin: $origin;
+	     -o-transform-origin: $origin;
+	    -ms-transform-origin: $origin;
+	-webkit-transform-origin: $origin;
+          transform-origin: $origin;
+}
+
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+
+$bp0: 1140px;
+$bp1: 980px;
+$bp2: 840px;
+$bp3: 720px;
+$bp4: 680px;
+$bp5: 600px; // Mobile Menu (Sm Tablet Portrait)
+$bp6: 480px; // Mobile Landscape
+$bp7: 320px; // Mobile Portrait
+
+@mixin respond-to($bp) {
+  @media only screen and (max-width: $bp) { @content; }
+}
+@mixin respond-above($bp) {
+  @media only screen and (min-width: $bp) { @content; }
+}
+@mixin respond-to-height($bp) {
+  @media only screen and (max-height: $bp) { @content; }
+}
+@mixin respond-above-height($bp) {
+  @media only screen and (min-height: $bp) { @content; }
+}
+@mixin retina() {
+  @media only screen and (-webkit-min-device-pixel-ratio: 2),
+    only screen and (   min--moz-device-pixel-ratio: 2),
+    only screen and (     -o-min-device-pixel-ratio: 2/1),
+    only screen and (        min-device-pixel-ratio: 2),
+    only screen and (                min-resolution: 192dpi),
+    only screen and (                min-resolution: 2dppx) { @content }
+}
+
+/* ==========================================================================
+   Grid
+   ========================================================================== */
+
+@import "grid";
+$total_width: 100%;
+$total_columns: 12;
+$gutter_width: 2.5%;
+$container_margin: auto;

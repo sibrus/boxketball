@@ -1,0 +1,45 @@
+/*
+//      _/      _/    _/_/    _/_/_/  _/      _/
+//     _/_/  _/_/  _/    _/    _/    _/_/    _/
+//    _/  _/  _/  _/_/_/_/    _/    _/  _/  _/
+//   _/      _/  _/    _/    _/    _/    _/_/
+//  _/      _/  _/    _/  _/_/_/  _/      _/
+*/
+
+@import "mixins";
+
+/* ==========================================================================
+   Body & Wrapper
+   ========================================================================== */
+   
+body { background: #000; color: #fff; width: 100vw; height: 100vh; text-align: center; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; @include font-size(1.4,2.3); @include oldskool; position: relative; }
+
+/* ==========================================================================
+   App Header
+   ========================================================================== */
+
+.app-header {
+  background: $pink; color: #000; @include font-size(4); padding: 15px 0; height: 70px; display: none;
+}
+
+/* ==========================================================================
+   Classic Mode
+   ========================================================================== */
+   
+.player {
+  position: absolute; top: 0; bottom: 0;
+  &#p1 { left: 0; right: 50%; border-right: 10px solid $pink; background: #00f; }
+  &#p2 { left: 50%; right: 0; border-left: 10px solid $pink; background: #0f0; }
+
+  header {
+    .emoji {}
+    h2 {}
+  }
+
+  .score {}
+  
+  footer {
+    .balls-label {}
+    .balls {}
+  }
+}
