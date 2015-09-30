@@ -12,15 +12,51 @@
     <script type="text/javascript" src="/javascripts/main.js"></script>
   </head>
   <body id="body">
-    <header class="app-header">
-      <i class="icon-logo"></i>
-    </header>
+    <!-- *** IDLE SCREEN *** -->    
+    <div id="idle-screen">
+      <div class="wrap">
+        <!-- Logo -->
+        <h2>dude, it's motherfuckin'</h2>
+        <i class="icon-logo"></i>
+        
+        <!-- Options -->
+        <ul>
+          <li><i class="icon-player" style="visibility:hidden;"></i><i class="icon-player"></i> Press <span class="color red">red</span> for <span class="mode">Score Attack</span></i></li>
+          <li><i class="icon-player"></i><i class="icon-player"></i> Press <span class="color green">green</span> for <span class="mode">Classic Mode</span></i></li>
+        </ul>
+      </div>
+    </div>
     
-    <div class="classic-mode">
+    <!-- *** SCORE ATTACK *** -->
+    <div id="score-attack" style="display: none;">
+      <!-- Points -->
+      <section class="points">
+        <h2>Points</h2>
+        <span id="sa_points"></span>
+      </section>
+      
+      <!-- Timer -->
+      <section class="timer">
+        <h2><i class="icon-timer"></i> Time Left:</h2>
+        <span id="sa_timeleft"></span>
+      </section>   
+      
+      <!-- Countdown -->
+      <div class="countdown">
+        <h2>Get Ready!</h2>
+        <span id="sa_countdown"></span>
+      </div>             
+
+      <div class="sa-game-over">
+        Game Over
+      </div>       
+    </div>
+
+    <!-- *** CLASSIC MODE *** -->    
+    <div id="classic-mode" style="display: none;">
       <!-- P1 -->
       <section class="player" id="p1">
         <header>
-          <span class="emoji" id="p1_emoji"><i class="icon-smile"></i></span>
           <h2>Player 1</h2>
         </header>
         
@@ -35,7 +71,6 @@
       <!-- P2 -->
       <section class="player" id="p2">
         <header>
-          <span class="emoji" id="p2_emoji"><i class="icon-hipster"></i></span>
           <h2>Player 2</h2>
         </header>
         
@@ -53,15 +88,32 @@
         <i class="icon-pos-left" id="p1_pos"></i>
         <i class="icon-pos-right" id="p2_pos"></i>
       </div>
+
+      <!-- Splash -->
+      <div class="splash" style="display:none;">
+        <span id="choosing">Choosing Start Player</span>
+        <div class="rules">
+          <h2>Classic Rules:</h2>
+          <ol>
+            <li>1. Alternate turns</li>
+            <li>2. Stay seated</li>
+            <li>3. Rebound for free ball</li>
+            <li>4. Can't score same box twice</li>
+            <li>5. Ball must reach far table</li>
+            <li>6. MOST POINTS WINS</li>
+          </ol>
+        </div>          
+      </div>      
       
-      <!-- Event Flash -->
-      <div class="event">
-        <span id="event-text"></span>
-      </div>          
+      <div class="classic-game-over">
+        <i class="icon-trophy"></i> <span id="game_winner">P1</span> Wins!
+      </div>       
     </div>
     
+    <!-- Event Flash -->
+    <div id="events-flasher"></div>         
     
-    <!--
+    <div style="display:none;">
     <h1>Game State</h1>
     <div>
       <label>Game state:</label>
@@ -112,6 +164,7 @@
     </div>
     <h1>Events</h1>
     <ul id="events">
-    </ul>-->
+    </ul>
+    </div>
   </body>
 </html>

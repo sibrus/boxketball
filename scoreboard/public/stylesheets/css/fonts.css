@@ -9,7 +9,7 @@
 	font-weight: normal;
 	font-style: normal;
 }
-
+/*
 @font-face {
 	font-family: 'highfive-alt';
 	src: url('/fonts/HighFiveJiveNF.eot');
@@ -39,7 +39,7 @@
 	font-weight: 100;
 	font-style: italic;
 }
-
+*/
 @font-face {
 	font-family: 'icomoon';
 	src:url('/fonts/icomoon.eot?rjilpu');
@@ -66,75 +66,54 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-ball:before {
+	content: "\e601";
+}
+.icon-pos-left:before {
+	content: "\e604";
+}
+.icon-pos-right:before {
+	content: "\e60d";
+}
 .icon-logo:before {
 	content: "\e600";
-}
-.icon-mark:before {
-	content: "\e601";
 }
 .icon-motherfuckin:before {
 	content: "\e602";
 }
-.icon-happy:before {
-	content: "\ed00";
+.icon-question:before {
+	content: "\e60e";
 }
-.icon-smile:before {
-	content: "\ed02";
+.icon-emoji-sad:before {
+	content: "\e605";
 }
-.icon-tongue:before {
-	content: "\ed04";
+.icon-emoji-shock:before {
+	content: "\e60f";
 }
-.icon-sad:before {
-	content: "\ed06";
+.icon-bomb:before {
+	content: "\e610";
 }
-.icon-wink:before {
-	content: "\ed08";
+.icon-emoji-happy:before {
+	content: "\e606";
 }
-.icon-grin:before {
-	content: "\ed0a";
+.icon-timer:before {
+	content: "\e607";
 }
-.icon-cool:before {
-	content: "\ed0c";
+.icon-skull:before {
+	content: "\e608";
 }
-.icon-angry:before {
-	content: "\ed0e";
+.icon-trophy:before {
+	content: "\e609";
 }
-.icon-evil:before {
-	content: "\ed10";
+.icon-bolt:before {
+	content: "\e611";
 }
-.icon-shocked:before {
-	content: "\ed12";
+.icon-cross:before {
+	content: "\e60a";
 }
-.icon-baffled:before {
-	content: "\ed14";
+.icon-check:before {
+	content: "\e60b";
 }
-.icon-confused:before {
-	content: "\ed16";
-}
-.icon-neutral:before {
-	content: "\ed18";
-}
-.icon-hipster:before {
-	content: "\ed1a";
-}
-.icon-wondering:before {
-	content: "\ed1c";
-}
-.icon-sleepy:before {
-	content: "\ed1e";
-}
-.icon-frustrated2:before {
-	content: "\ed20";
-}
-.icon-crying:before {
-	content: "\ed22";
-}
-.icon-pos-right:before {
-	content: "\edcb";
-}
-.icon-pos-left:before {
-	content: "\edcf";
-}
-.icon-ball:before {
-	content: "\ee75";
+.icon-player:before {
+	content: "\e60c";
 }
