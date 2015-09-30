@@ -15,6 +15,7 @@ BoxketballClient.prototype = {
 
     this.socket.on('box.events', this.processEventMessage);
     this.socket.on('box.game.boxketball', this.processGameMessage);
+    this.socket.on('box.game.scoreattack', this.processScoreAttack);
   },
 
   processEventMessage: function(payload) {
@@ -27,6 +28,15 @@ BoxketballClient.prototype = {
       console.log(payload);
     } catch(e) {
       console.log('Error processing event message: ' + e);
+    }
+  },
+
+  processScoreAttack: function(payload) {
+    try {
+      console.log(payload);
+      var game = payload.gameState;
+    } catch(e) {
+      console.log('Error processing game message: ' + e);
     }
   },
 

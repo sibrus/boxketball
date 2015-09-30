@@ -17,6 +17,7 @@ SocketServer.prototype = {
     this.subClient.on('message', this.processInMsg);
     this.subClient.subscribe('box.events');
     this.subClient.subscribe('box.game.boxketball');
+    this.subClient.subscribe('box.game.scoreattack');
 
     this.io = SocketIO(server);
 
