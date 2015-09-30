@@ -31,6 +31,18 @@ subClient.on('message', function(channel, message) {
     case 'indicatorOff':
       writeToSerial('i', payload.data);
       break;
+    case 'hoopOn':
+      writeToSerial('H', 0);
+      break;
+    case 'hoopOff':
+      writeToSerial('h', 0);
+      break;
+    case 'reboundOn':
+      writeToSerial('R', 0);
+      break;
+    case 'reboundOff':
+      writeToSerial('r', 0);
+      break;
     default:
       console.log('Unknown message: ' + message);
     }
@@ -65,9 +77,20 @@ function processSerialBuffer() {
   //console.log('cmdRaw: ' + inputBuffer[0]);
   //console.log('data: ' + data);
   if (cmd == 'B') {
-    publishMessage({ msg: "basketHit", data: data });
+    publishMessage({ msg: 'basketHit', data: data });
     //writeToSerial('+', data);
     //setTimeout(function() { writeToSerial('-', data); }, 100);
+  } else if (cmd == 'P') {
+    publishMessage({ msg: 'buttonPress', data: data });
+  } else if (cmd == 'S') {
+    publishMessage({ msg: 'switchOn', data: data });
+  } else if (cmd == 's') {
+    publishMessage({ msg: 'switchOff', data: data });
+  } else if (cmd == 'g') {
+    publishMessage({ msg: 'hoopHit' });
+  } else if (cmd == 'z') {
+    publishMessage({ msg: 'reboundHit' });
+    console.log('Rebound data: ' + data);
   } else {
     console.log('cmd: ' + cmd);
     console.log('cmdRaw: ' + inputBuffer[0]);
