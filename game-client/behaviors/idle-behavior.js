@@ -9,7 +9,7 @@ var IdleBehavior = Behavior.extend({
     resetAll(this);
     this.cycler1 = cycleBaskets(this, [4, 0, 1, 2, 3], 500, true);
     this.cycler2 = cycleBaskets(this, [8, 9, 5, 6, 7], 500, true);
-    this.cycler3 = cycleBaskets(this, [12, 13, 14, 10, 11], 500, true);
+    this.cycler3 = cycleBaskets(this, [12, 10, 11], 500, true);
   },
   destroyHook: function() {
     this.cycler1.cancel('parent destroyed');
@@ -22,8 +22,10 @@ var IdleBehavior = Behavior.extend({
   processMessage: function(channel, payload) {
     console.log('IdleBehavior got message');
     if (payload.msg === 'buttonPress') {
-      if (payload.data == 6) {
+      if (payload.data == 5) {
         this.transitionTo('blink');
+      } else if (payload.data == 0 || payload.data == 2) {
+        this.transitionTo('scoreattack');
       } else {
         this.transitionTo('boxketball');
       }

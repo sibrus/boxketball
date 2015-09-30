@@ -18,3 +18,4 @@ client.subscribe('box.raw.output');
 client.subscribe('box.raw.input');
 client.subscribe('box.events');
 client.subscribe('box.game.boxketball');
+client.subscribe('box.game.scoreattack');

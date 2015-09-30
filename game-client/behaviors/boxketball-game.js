@@ -128,6 +128,8 @@ var BoxketballGame = Behavior.extend({
         this.basketOn(baskets[i]);
       }
     }
+    this.multiplierHit = false;
+    this.hoopHit = false;
     if (playerNumber == 1) {
       this.indicatorOn('p1');
       this.indicatorOff('p2');
@@ -184,6 +186,9 @@ var BoxketballGame = Behavior.extend({
       if (payload.msg === 'reboundHit') {
         this.hitRebound();
       }
+      if (payload.msg === 'hoopHit') {
+        this.hitHoop();
+      }
       if (payload.msg === 'buttonPress') {
         if (payload.button.key === 'rebound_yes') {
           this.hitRebound();
@@ -234,6 +239,15 @@ var BoxketballGame = Behavior.extend({
   hitRebound: function() {
     this.multiplierHit = true;
     this.publishGame('multiplierHit');
+  },
+  hitHoop: function() {
+    if (this.hoopHit) {
+      return;
+    }
+    this.hoopHit = true;
+    var player = this.getCurrentPlayer();
+    player.score += 2;
+    this.publishGame('hitHoop');
   },
   isBasketHit: function(basket) {
     if (this.gameState == 'suddenDeath') {

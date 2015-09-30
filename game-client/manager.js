@@ -2,6 +2,7 @@ var _ = require('lodash');
 var Client = require('./client');
 
 var BoxketballGame = require('./behaviors/boxketball-game');
+var ScoreAttack = require('./behaviors/score-attack');
 var IdleBehavior = require('./behaviors/idle-behavior');
 var BlinkBehavior = require('./behaviors/blink-behavior');
 var NothingBehavior = require('./behaviors/nothing-behavior');
@@ -19,7 +20,8 @@ Manager.prototype = {
       boxketball: BoxketballGame,
       idle: IdleBehavior,
       blink: BlinkBehavior,
-      nothing: NothingBehavior
+      nothing: NothingBehavior,
+      scoreattack: ScoreAttack
     }
     this.transitionTo('idle');
   },
