@@ -266,6 +266,7 @@ var BoxketballGame = Behavior.extend({
     this.hoopHit = true;
     var player = this.getCurrentPlayer();
     player.score += 2;
+    blinkTo(this, { target: 'hoop', ending: 'on' });
     this.publishGame('hitHoop');
   },
   isBasketHit: function(basket) {
@@ -307,6 +308,7 @@ var BoxketballGame = Behavior.extend({
         //TODO:: Do some animation or something
         self.reboundOff();
         reset(self, 'basketOff', baskets);
+        blinkTo(self, { target: { basket: basket.number }, delay: 140, count: 5, ending: 'off' });
       })
     ]);  
   }

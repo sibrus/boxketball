@@ -19,25 +19,25 @@ function changeState(state, owner, options) {
     }
   }
   if (typeof options.target === 'object') {
-    if (typeof options.basket !== 'undefined') {
+    if (typeof options.target.basket !== 'undefined') {
       if (state) {
-        owner.basketOn(options.basket);
+        owner.basketOn(options.target.basket);
       } else {
-        owner.basketOff(options.basket);
+        owner.basketOff(options.target.basket);
       }
     }
-    if (typeof options.button !== 'undefined') {
+    if (typeof options.target.button !== 'undefined') {
       if (state) {
-        owner.buttonOn(options.button);
+        owner.buttonOn(options.target.button);
       } else {
-        owner.buttonOff(options.button);
+        owner.buttonOff(options.target.button);
       }
     }
-    if (typeof options.indicator !== 'undefined') {
+    if (typeof options.target.indicator !== 'undefined') {
       if (state) {
-        owner.indicatorOn(options.indicator);
+        owner.indicatorOn(options.target.indicator);
       } else {
-        owner.indicatorOff(options.indicator);
+        owner.indicatorOff(options.target.indicator);
       }
     }
   }
