@@ -56,10 +56,19 @@ body {
   .player#p1 {
     left: 0;
     right: 50%;
-    border-right: 10px solid #ff2949;
-    background: #00f; }
+    border-right: 10px solid #ff2949; }
   .player#p2 {
     left: 50%;
     right: 0;
-    border-left: 10px solid #ff2949;
-    background: #0f0; }
+    border-left: 10px solid #ff2949; }
+  .player header .emoji {
+    float: left;
+    font-size: 30px;
+    font-size: 3rem;
+    color: #ffff00;
+    margin-right: 15px; }
+  .player header h2 {
+    font-family: 'highfive', sans-serif;
+    font-size: 30px;
+    font-size: 3rem;
+    color: #fff; }

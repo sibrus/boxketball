@@ -28,12 +28,16 @@ body { background: #000; color: #fff; width: 100vw; height: 100vh; text-align: c
    
 .player {
   position: absolute; top: 0; bottom: 0;
-  &#p1 { left: 0; right: 50%; border-right: 10px solid $pink; background: #00f; }
-  &#p2 { left: 50%; right: 0; border-left: 10px solid $pink; background: #0f0; }
+  &#p1 { left: 0; right: 50%; border-right: 10px solid $pink; }
+  &#p2 { left: 50%; right: 0; border-left: 10px solid $pink; }
 
   header {
-    .emoji {}
-    h2 {}
+    .emoji { 
+      float: left; @include font-size(3); color: #ffff00; margin-right: 15px;
+    }
+    h2 {
+      @include highfive; @include font-size(3); color: #fff;
+    }
   }
 
   .score {}
