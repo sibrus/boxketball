@@ -308,7 +308,7 @@ var BoxketballGame = Behavior.extend({
         //TODO:: Do some animation or something
         self.reboundOff();
         reset(self, 'basketOff', baskets);
-        blinkTo(self, { target: { basket: basket.number }, delay: 140, count: 5, ending: 'off' });
+        blinkTo(self, { target: { basket: basket.number }, ending: 'off' });
       })
     ]);  
   }

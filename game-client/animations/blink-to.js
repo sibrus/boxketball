@@ -2,8 +2,6 @@ var Promise = require('bluebird');
 var co = require('co');
 
 function changeState(state, owner, options) {
-  console.log('Change state to: ' + state);
-  console.log(options);
   if (options.target === 'hoop') {
     if (state) {
       owner.hoopOn();
@@ -47,7 +45,7 @@ module.exports = function blinkTo(owner, options) {
   options = _.extend({},
   {
     target: { basket: 1 },
-    delay: 250,
+    delay: 140,
     count: 5,
     ending: 'off'
   }, options);

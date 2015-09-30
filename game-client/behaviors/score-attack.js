@@ -11,6 +11,8 @@ var switches = requireRoot('/data/switches');
 var reset = requireRoot('/animations/reset');
 var resetAll = requireRoot('/animations/reset-all');
 var pickPlayer = requireRoot('/animations/pick-player');
+var blinkTo = requireRoot('/animations/blink-to');
+var cycleBaskets = requireRoot('/animations/cycle-baskets');
 
 var Player = function(num) {
   this.number = num;
@@ -35,8 +37,18 @@ var BoxketballGame = Behavior.extend({
     ];
     this.multiplierHit = false;
 
+    this.buttonOn('rebound_yes');
+    this.buttonOn('rebound_no');
+    this.buttonOn('soft_reset');
+    this.buttonOn('hard_reset');
+    this.switchOn(0);
+    this.reboundOff();
+
     this.publishGame('gameStarting');
     var self = this;
+
+    this.cycler1 = cycleBaskets(this, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ,11, 12], 150, true);
+
     co(function *() {
       for (var i = 0; i < 5; i++) {
         self.publishGame('preGameCountDown', { count: 5 - i });
@@ -46,6 +58,15 @@ var BoxketballGame = Behavior.extend({
     });
   },
   startGame: function() {
+
+    this.cycler1.cancel('intro over');
+    this.cycler1 = null;
+
+    for (var i = 0; i < baskets.length; i++) {
+      this.basketOn(baskets[i]);
+    }
+    this.hoopOn();
+
     this.gameState = 'gameOn';
     this.publishGame('gameOn');
     var self = this;
@@ -112,16 +133,22 @@ var BoxketballGame = Behavior.extend({
   },
   clearRebound: function() {
     this.multiplierHit = false;
+    this.reboundOff();
     this.publishGame('multiplierCleared');
   },
   hitRebound: function() {
     this.multiplierHit = true;
     this.publishGame('multiplierHit');
+    blinkTo(this, { target: 'rebound', ending: 'on' });
+
     var self = this;
+    //TODO:: this is all sorts of timing bugs and a bad way to do stuff...
+    // at least create a way to clear this if the multiplier is re-hit
     co(function *() {
       yield Promise.delay(5000);
       if (self.multiplierHit) {
         self.multiplierHit = false;
+        self.reboundOff();
         self.publishGame('multiplierCleared');
       }
     });
@@ -129,6 +156,7 @@ var BoxketballGame = Behavior.extend({
   hitHoop: function() {
     var player = this.getCurrentPlayer();
     player.score += 2;
+    blinkTo(this, { target: 'hoop', ending: 'on' });
     this.publishGame('hitHoop');
   },
   tryHitBasket: function(basket) {
@@ -141,6 +169,8 @@ var BoxketballGame = Behavior.extend({
 
     var multiple = (this.multiplierHit) ? 2 : 1;
     player.score += basket.points * multiple;
+
+    blinkTo(this, { target: { basket: basket.number }, ending: 'on' });
     this.publishGame('hitBasket', { basket: basket });
   }
 });
