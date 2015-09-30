@@ -60,7 +60,7 @@ int numPiezoSensors = 5;
 int piezoSensors[5];
 int lastPiezoStates[5];
 int triggeredPiezoSensors[5];
-int piezoThreshold = 15;
+int piezoThreshold = 100;
 
 #define basketInterrupt(x) void basketInterrupt ##x () { sensorStates[x] = digitalRead(basketSensors[x]); }
 #define buttonInterrupt(x) void buttonInterrupt ##x () { buttonStates[x] = digitalRead(buttons[x]); }
@@ -160,13 +160,15 @@ void setup() {
     pinMode(baskets[i], OUTPUT); // init basket indicator pin as output
     pinMode(basketSensors[i], INPUT); // init sensor pin as input
     digitalWrite(basketSensors[i], HIGH); // turn on the pullup
+    digitalWrite(baskets[i], LOW); //Baskets start off
     lastSensorStates[i] = HIGH;
-    sensorStates[i] = HIGH;
+    sensorStates[i] = HIGH;    
     triggeredBaskets[i] = 0;
   }
 
   for (i = 0; i < numIndicators; i++) {
     pinMode(indicators[i], OUTPUT); // init misc indicator pin as output
+    digitalWrite(indicators[i], LOW); //indicators start off
   }
 
   for (i = 0; i < numButtons; i++) {
@@ -184,10 +186,12 @@ void setup() {
   }
 
   pinMode(reboundLight, OUTPUT);
+  digitalWrite(reboundLight, LOW); //Rebound starts off
 
   pinMode(hoopLight, OUTPUT);
   pinMode(hoopSensor, INPUT);
   digitalWrite(hoopSensor, HIGH);
+  digitalWrite(hoopLight, LOW); //Hoop starts off
   lastHoopState = HIGH;
   hoopState = HIGH;
   triggeredHoop = 0;
@@ -354,7 +358,7 @@ void loop() {
 
   for (i = 0; i < numPiezoSensors; i++) {
     if (triggeredPiezoSensors[i] == 1) {
-      serialmsg('z', i);
+      //serialmsg('z', i);
     }
   }
   
