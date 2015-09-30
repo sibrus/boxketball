@@ -11,6 +11,8 @@ var switches = requireRoot('/data/switches');
 var reset = requireRoot('/animations/reset');
 var resetAll = requireRoot('/animations/reset-all');
 var pickPlayer = requireRoot('/animations/pick-player');
+var blinkTo = requireRoot('/animations/blink-to');
+var cycleBaskets = requireRoot('/animations/cycle-baskets');
 
 var Player = function(num) {
   this.number = num;
@@ -29,6 +31,14 @@ Player.prototype.toJSON = function() {
 var BoxketballGame = Behavior.extend({
   initHook: function() {
     resetAll(this);
+
+    this.buttonOn('rebound_yes');
+    this.buttonOn('rebound_no');
+    this.buttonOn('soft_reset');
+    this.buttonOn('hard_reset');
+    this.switchOn(0);
+    this.reboundOff();
+
     this.gameState = 'starting';
     this.players = [
       new Player(1),
@@ -40,14 +50,19 @@ var BoxketballGame = Behavior.extend({
     this.inSuddenDeath = false;
     this.numSuddenDeath = 0;
 
+    this.cycler1 = null;
+
     this.publishGame('gameStarting');
     this.decidePlayerTurn();
   },
   decidePlayerTurn: function() {
     var startingPlayer = (rand.bool()) ? 1 : 2;
+    this.cycler1 = cycleBaskets(this, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ,11, 12], 150, true);
     pickPlayer(this, startingPlayer)
       .bind(this)
       .then(function() {
+        this.cycler1.cancel('intro over');
+        this.cycler1 = null;
         this.giveTurn(startingPlayer, false);
         this.gameState = 'gameOn';
         this.publishGame('gameOn');
@@ -129,6 +144,8 @@ var BoxketballGame = Behavior.extend({
       }
     }
     this.multiplierHit = false;
+    this.reboundOff();
+    this.hoopOn();
     this.hoopHit = false;
     if (playerNumber == 1) {
       this.indicatorOn('p1');
@@ -233,12 +250,14 @@ var BoxketballGame = Behavior.extend({
     }
   },
   clearRebound: function() {
-    this.multiplierHit = false
-    this.publishGame('multiplierCleared')
+    this.multiplierHit = false;
+    this.reboundOff();
+    this.publishGame('multiplierCleared');
   },
   hitRebound: function() {
     this.multiplierHit = true;
     this.publishGame('multiplierHit');
+    blinkTo(this, { target: 'rebound', ending: 'on' });
   },
   hitHoop: function() {
     if (this.hoopHit) {
@@ -285,7 +304,8 @@ var BoxketballGame = Behavior.extend({
     Promise.all([
       this.nextTurn(),
       co(function *() {
-        // Do some animation or something
+        //TODO:: Do some animation or something
+        self.reboundOff();
         reset(self, 'basketOff', baskets);
       })
     ]);  
