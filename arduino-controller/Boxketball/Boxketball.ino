@@ -60,7 +60,7 @@ int numPiezoSensors = 5;
 int piezoSensors[5];
 int lastPiezoStates[5];
 int triggeredPiezoSensors[5];
-int piezoThreshold = 100;
+int piezoThreshold = 20;
 
 #define basketInterrupt(x) void basketInterrupt ##x () { sensorStates[x] = digitalRead(basketSensors[x]); }
 #define buttonInterrupt(x) void buttonInterrupt ##x () { buttonStates[x] = digitalRead(buttons[x]); }
@@ -328,7 +328,7 @@ void loop() {
       triggeredPiezoSensors[i] = 1;
     }
 
-    lastPiezoStates[i] = sensorState;
+    lastPiezoStates[i] = sensorState;    
   }
 
   for (i = 0; i < numBaskets; i++) {
@@ -358,7 +358,7 @@ void loop() {
 
   for (i = 0; i < numPiezoSensors; i++) {
     if (triggeredPiezoSensors[i] == 1) {
-      //serialmsg('z', i);
+      serialmsg('z', i);
     }
   }
   
