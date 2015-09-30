@@ -51,6 +51,8 @@ volatile int hoopState;
 int lastHoopState;
 int triggeredHoop;
 
+int reboundLight;
+
 byte inputBuffer[2];
 int inputPos;
 
@@ -61,10 +63,35 @@ int triggeredPiezoSensors[5];
 int piezoThreshold = 15;
 
 #define basketInterrupt(x) void basketInterrupt ##x () { sensorStates[x] = digitalRead(basketSensors[x]); }
+#define buttonInterrupt(x) void buttonInterrupt ##x () { buttonStates[x] = digitalRead(buttons[x]); }
+#define switchInterrupt(x) void switchInterrupt ##x () { switchStates[x] = digitalRead(switches[x]); }
+
+void hoopInterrupt() { hoopState = digitalRead(hoopSensor); }
 
 basketInterrupt(0);
 basketInterrupt(1);
 basketInterrupt(2);
+basketInterrupt(3);
+basketInterrupt(4);
+basketInterrupt(5);
+basketInterrupt(6);
+basketInterrupt(7);
+basketInterrupt(8);
+basketInterrupt(9);
+basketInterrupt(10);
+basketInterrupt(11);
+basketInterrupt(12);
+
+buttonInterrupt(0);
+buttonInterrupt(1);
+buttonInterrupt(2);
+buttonInterrupt(3);
+buttonInterrupt(4);
+buttonInterrupt(5);
+buttonInterrupt(6);
+buttonInterrupt(7);
+
+switchInterrupt(0);
 
 void setup() {
   baskets[0] = 9;
@@ -93,6 +120,8 @@ void setup() {
   basketSensors[11] = 32;
   baskets[12] = 42;
   basketSensors[12] = 35;
+
+  reboundLight = 12;
 
   hoopLight = 44;
   hoopSensor = 37;
@@ -140,11 +169,57 @@ void setup() {
     pinMode(indicators[i], OUTPUT); // init misc indicator pin as output
   }
 
+  for (i = 0; i < numButtons; i++) {
+    pinMode(buttons[i], INPUT_PULLUP);
+    lastButtonStates[i] = HIGH;
+    buttonStates[i] = HIGH;
+    triggeredButtons[i] = 0;
+  }
+
+  for (i = 0; i < numSwitches; i++) {
+    pinMode(switches[i], INPUT_PULLUP);
+    lastSwitchStates[i] = HIGH;
+    switchStates[i] = HIGH;
+    changedSwitches[i] = 0;
+  }
+
+  pinMode(reboundLight, OUTPUT);
+
+  pinMode(hoopLight, OUTPUT);
+  pinMode(hoopSensor, INPUT);
+  digitalWrite(hoopSensor, HIGH);
+  lastHoopState = HIGH;
+  hoopState = HIGH;
+  triggeredHoop = 0;
+
   Serial.begin(57600);
 
   attachInterrupt(basketSensors[0], basketInterrupt0, CHANGE);
   attachInterrupt(basketSensors[1], basketInterrupt1, CHANGE);
   attachInterrupt(basketSensors[2], basketInterrupt2, CHANGE);
+  attachInterrupt(basketSensors[3], basketInterrupt3, CHANGE);
+  attachInterrupt(basketSensors[4], basketInterrupt4, CHANGE);
+  attachInterrupt(basketSensors[5], basketInterrupt5, CHANGE);
+  attachInterrupt(basketSensors[6], basketInterrupt6, CHANGE);
+  attachInterrupt(basketSensors[7], basketInterrupt7, CHANGE);
+  attachInterrupt(basketSensors[8], basketInterrupt8, CHANGE);
+  attachInterrupt(basketSensors[9], basketInterrupt9, CHANGE);
+  attachInterrupt(basketSensors[10], basketInterrupt10, CHANGE);
+  attachInterrupt(basketSensors[11], basketInterrupt11, CHANGE);
+  attachInterrupt(basketSensors[12], basketInterrupt12, CHANGE);
+
+  attachInterrupt(buttons[0], buttonInterrupt0, CHANGE);
+  attachInterrupt(buttons[1], buttonInterrupt1, CHANGE);
+  attachInterrupt(buttons[2], buttonInterrupt2, CHANGE);
+  attachInterrupt(buttons[3], buttonInterrupt3, CHANGE);
+  attachInterrupt(buttons[4], buttonInterrupt4, CHANGE);
+  attachInterrupt(buttons[5], buttonInterrupt5, CHANGE);
+  attachInterrupt(buttons[6], buttonInterrupt6, CHANGE);
+  attachInterrupt(buttons[7], buttonInterrupt7, CHANGE);
+
+  attachInterrupt(switches[0], switchInterrupt0, CHANGE);
+
+  attachInterrupt(hoopSensor, hoopInterrupt, CHANGE);
 }
 
 void processInput() {
@@ -172,6 +247,19 @@ void processInput() {
         digitalWrite(indicators[data], LOW);
       }
       break;
+    case 'H': //Turn on hoop
+      digitalWrite(hoopLight, HIGH);
+      break;
+    case 'h': //Turn off hoop
+      digitalWrite(hoopLight, LOW);
+      break;
+    case 'R': //Turn on rebound
+      digitalWrite(reboundLight, HIGH);
+      break;
+    case 'r': //Turn off rebound
+      digitalWrite(reboundLight, LOW);
+      break;
+    
   }
   inputPos = 0;
 }
@@ -182,6 +270,16 @@ void loop() {
   for (i = 0; i < numBaskets; i++) {
     triggeredBaskets[i] = 0;
   }
+  for (i = 0; i < numButtons; i++) {
+    triggeredButtons[i] = 0;
+  }
+  for (i = 0; i < numSwitches; i++) {
+    changedSwitches[i] = 0;
+  }
+  triggeredHoop = 0;
+  for (i = 0; i < numPiezoSensors; i++) {
+    triggeredPiezoSensors[i] = 0;
+  }
 
   noInterrupts();
   for (i = 0; i < numBaskets; i++) {
@@ -190,11 +288,73 @@ void loop() {
     }
     lastSensorStates[i] = sensorStates[i];
   }
+  
+  for (i = 0; i < numButtons; i++) {
+    if (lastButtonStates[i] == HIGH && buttonStates[i] == LOW) {
+      triggeredButtons[i] = 1;
+    }
+    lastButtonStates[i] = buttonStates[i];
+  }
+  
+  for (i = 0; i < numSwitches; i++) {
+    if (lastSwitchStates[i] != switchStates[i]) {
+      if (switchStates[i] == LOW) {
+        changedSwitches[i] = 1;
+      } else {
+        changedSwitches[i] = 2;
+      }
+    }
+    lastSwitchStates[i] = switchStates[i];
+  }
+  
+  if (lastHoopState == HIGH && hoopState == LOW) {
+    triggeredHoop = 1;
+  }
+  lastHoopState = hoopState;  
   interrupts();
+
+  int sensorValue;
+  int sensorState;
+
+  for (i = 0; i < numPiezoSensors; i++) {
+    sensorValue = analogRead(piezoSensors[i]);
+    sensorState = (sensorValue > piezoThreshold) ? HIGH : LOW;
+
+    if (lastPiezoStates[i] == LOW && sensorState == HIGH) {
+      triggeredPiezoSensors[i] = 1;
+    }
+
+    lastPiezoStates[i] = sensorState;
+  }
 
   for (i = 0; i < numBaskets; i++) {
     if (triggeredBaskets[i] == 1) {
       serialmsg('B', i);
+    }
+  }
+
+  for (i = 0; i < numButtons; i++) {
+    if (triggeredButtons[i] == 1) {
+      serialmsg('P', i);
+    }
+  }
+
+  for (i = 0; i < numSwitches; i++) {
+    if (changedSwitches[i] == 1) {
+      serialmsg('S', i);
+    }
+    if (changedSwitches[i] == 2) {
+      serialmsg('s', i);
+    }
+  }
+
+  if (triggeredHoop == 1) {
+    serialmsg('g', 0);
+  }
+
+  for (i = 0; i < numPiezoSensors; i++) {
+    if (triggeredPiezoSensors[i] == 1) {
+      serialmsg('z', i);
     }
   }
   
