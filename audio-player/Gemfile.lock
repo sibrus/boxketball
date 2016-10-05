@@ -20,6 +20,3 @@ DEPENDENCIES
   json
   redis
   rubygame
-
-BUNDLED WITH
-   1.10.6
